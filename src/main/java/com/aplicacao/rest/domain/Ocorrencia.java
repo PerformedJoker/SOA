@@ -41,23 +41,12 @@ public class Ocorrencia implements Serializable,Comparable<Ocorrencia> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idBo;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd/MM/yyyy",locale = "pt-BR", timezone = "Brazil/East")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataFato;
-
 	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd/MM/yyyy HH:mm:ss",locale = "pt-BR", timezone = "Brazil/East")
 	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataRegistro;
 	
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="HH:mm",locale = "pt-BR", timezone = "Brazil/East")
-	@DateTimeFormat(pattern = "HH:mm")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date horaFato;
-	
-
 	private String uf;
 	
 	private String cidade;
@@ -112,13 +101,6 @@ public class Ocorrencia implements Serializable,Comparable<Ocorrencia> {
 		this.idBo = idBo;
 	}
 
-	public Date getDataFato() {
-		return dataFato;
-	}
-
-	public void setDataFato(Date dataFato) {
-		this.dataFato = dataFato;
-	}
 
 	public Date getDataRegistro() {
 		return dataRegistro;
@@ -128,13 +110,6 @@ public class Ocorrencia implements Serializable,Comparable<Ocorrencia> {
 		this.dataRegistro = dataRegistro;
 	}
 
-	public Date getHoraFato() {
-		return horaFato;
-	}
-
-	public void setHoraFato(Date horaFato) {
-		this.horaFato = horaFato;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
