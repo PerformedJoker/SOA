@@ -198,7 +198,7 @@ public class OcorrenciaService {
 			throw new NaturezaInvalidaException("Natureza não existe");
 		}
 		if(bairro==null) {
-			throw new NaturezaInvalidaException("Bairro não existe");
+			throw new BairroInvalidoException("Bairro não existe");
 		}
 		List<Ocorrencia> listaDeOcorrencias = ocorrenciaRepository.findByBairroAndNatureza(bairro, natureza);
 		if(listaDeOcorrencias == null) {

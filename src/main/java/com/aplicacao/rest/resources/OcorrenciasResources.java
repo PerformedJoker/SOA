@@ -138,8 +138,8 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/data/natureza/{dataInicio}/{dataFim}/{nomeNatureza:.+}",method = RequestMethod.GET)
-	public ResponseEntity<?> pesquisaEntreDatasENatureza( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("nomeNatureza")String natureza) throws ParseException{
+	@RequestMapping(value="/data/natureza/nome/{dataInicio}/{dataFim}/{nomeNatureza}",method = RequestMethod.GET)
+	public ResponseEntity<?> pesquisaEntreDatasENomeNatureza( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("nomeNatureza")String natureza) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
 	
@@ -152,6 +152,7 @@ public class OcorrenciasResources {
 				Date dateF = formatter1.parse(dataFim);
 				Date datesIn = (Date) dateI;
 				Date datesFi= (Date) dateF;
+				natureza = natureza.toUpperCase();
 				ocorrencias = ocorrenciaService.ocorrenciasEntreDatasENomeNatureza(datesIn, datesFi, natureza);
 			}
 		
@@ -180,7 +181,7 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/data/natureza/{dataInicio}/{dataFim}/{idBairro}",method = RequestMethod.GET)
+	@RequestMapping(value="/data/bairro/{dataInicio}/{dataFim}/{idBairro}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaEntreDatasEBairro( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("idBairro")Bairro bairro) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
@@ -222,7 +223,7 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/data/natureza/{dataInicio}/{dataFim}/{nomeBairro}",method = RequestMethod.GET)
+	@RequestMapping(value="/data/bairro/nome/{dataInicio}/{dataFim}/{nomeBairro}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaEntreDatasENomeBairro( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("nomeBairro")String nomeBairro) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
@@ -236,6 +237,7 @@ public class OcorrenciasResources {
 				Date dateF = formatter1.parse(dataFim);
 				Date datesIn = (Date) dateI;
 				Date datesFi= (Date) dateF;
+				nomeBairro = nomeBairro.toUpperCase();
 				ocorrencias = ocorrenciaService.ocorrenciasEntreDatasENomeBairro(datesIn, datesFi,nomeBairro);
 			}
 		
@@ -312,7 +314,7 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 
-	@RequestMapping(value="/data/natureza/bairro/{dataInicio}/{dataFim}/{nomeNatureza}/{nomeBairro}",method = RequestMethod.GET)
+	@RequestMapping(value="/data/natureza/bairro/nome/{dataInicio}/{dataFim}/{nomeNatureza}/{nomeBairro}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaEntreDatasENomeBairroENomeNatureza(@PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("nomeBairro")String nomebairro, @PathVariable("nomeNatureza")String nomeNatureza) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
@@ -326,6 +328,8 @@ public class OcorrenciasResources {
 				Date dateF = formatter1.parse(dataFim);
 				Date datesIn = (Date) dateI;
 				Date datesFi= (Date) dateF;
+				nomebairro = nomebairro.toUpperCase();
+				nomeNatureza = nomeNatureza.toUpperCase();
 				ocorrencias = ocorrenciaService.ocorrenciasEntreDatasNomeNaturezaENomeBairro(datesIn, datesFi,nomeNatureza,nomebairro);
 			}
 		
@@ -393,13 +397,15 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/natureza/bairro/{nomeNatureza}/{nomeBairro}",method = RequestMethod.GET)
-	public ResponseEntity<?> pesquisaNomeBairroENomeNatureza( @PathVariable("nomeBairro")Bairro bairro, @PathVariable("nomeNatureza")Natureza natureza) throws ParseException{
+	@RequestMapping(value="/natureza/bairro/nome/{nomeNatureza}/{nomeBairro}",method = RequestMethod.GET)
+	public ResponseEntity<?> pesquisaNomeBairroENomeNatureza( @PathVariable("nomeBairro")String bairro, @PathVariable("nomeNatureza")String natureza) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
 	
 		try {
-				ocorrencias = ocorrenciaService.ocorrenciasPorNaturezaEBairro(natureza,bairro);
+			bairro = bairro.toUpperCase();
+			natureza = natureza.toUpperCase();
+				ocorrencias = ocorrenciaService.ocorrenciasPorNomeNaturezaENomeBairro(natureza,bairro);
 		
 			
 			
@@ -419,7 +425,7 @@ public class OcorrenciasResources {
 			DetalheErro detalheErro = new DetalheErro();
 			detalheErro.setStatus("404");
 			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
-			detalheErro.setTitulo("Bairro não encontrada.");
+			detalheErro.setTitulo("Bairro não encontrado.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
 		}
 		
@@ -448,7 +454,7 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/natureza/{nomeNatureza}",method = RequestMethod.GET)
+	@RequestMapping(value="/natureza/nome/{nomeNatureza}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaBairroENomeNatureza(@PathVariable("idNatureza")String nomeNatureza) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
@@ -500,7 +506,7 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
 	}
 	
-	@RequestMapping(value="/bairro/{nomeBairro}",method = RequestMethod.GET)
+	@RequestMapping(value="/bairro/nome/{nomeBairro}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaBairroENomeBairro(@PathVariable("nomeBairro")String nomeBairro) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
