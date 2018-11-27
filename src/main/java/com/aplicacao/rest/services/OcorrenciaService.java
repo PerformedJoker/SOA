@@ -10,6 +10,7 @@ import com.aplicacao.rest.domain.Ocorrencia;
 import com.aplicacao.rest.list.Bairro;
 import com.aplicacao.rest.list.Natureza;
 import com.aplicacao.rest.repository.OcorrenciaRepository;
+import com.aplicacao.rest.services.exceptions.OcorrenciaDataInvalidaException;
 import com.aplicacao.rest.services.exceptions.OcorrenciaExistenteException;
 
 @Service
@@ -81,6 +82,26 @@ public class OcorrenciaService {
 	public String formataData(String dataNiver) {
 		String resultado =dataNiver.substring(0,2)+"/"+dataNiver.substring(2,4)+"/"+dataNiver.substring(4,8)+" 00:00:00";
 		return resultado;
+	}
+	
+	
+	public Boolean validaData(String dataInicio,String dataFim) {
+		if(dataInicio.isEmpty() && dataFim.isEmpty()) {
+			throw new OcorrenciaDataInvalidaException("Datas vazias");
+		}else if(dataInicio.isEmpty() && !dataFim.isEmpty()) {
+			throw new OcorrenciaDataInvalidaException("Data de Inicio vazia");
+		}else if(!dataInicio.isEmpty() && dataFim.isEmpty()) {
+			throw new OcorrenciaDataInvalidaException("Data Final vazia");
+		}else {
+			 if(dataInicio.contains("^[a-Z]") || dataInicio.contains("^[!#@$%¨&*_]") ){
+				 throw new OcorrenciaDataInvalidaException("Data de Inicio com formato invalido");
+			 }
+			 if(dataFim.contains("^[a-Z]") || dataFim.contains("^[!#@$%¨&*_]") ){
+				 throw new OcorrenciaDataInvalidaException("Data Final com formato invalido");
+			 }
+			
+			return true;
+		}
 	}
 	
 }

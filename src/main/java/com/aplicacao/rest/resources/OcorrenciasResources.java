@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.aplicacao.rest.domain.DetalheErro;
 import com.aplicacao.rest.domain.Ocorrencia;
 import com.aplicacao.rest.services.OcorrenciaService;
+import com.aplicacao.rest.services.exceptions.OcorrenciaDataInvalidaException;
 import com.aplicacao.rest.services.exceptions.OcorrenciaExistenteException;
 
 @RestController
@@ -71,13 +72,16 @@ public class OcorrenciasResources {
 	}
 	
 	
-	@RequestMapping(value="/{dataInicio}/{dataFim}/",method = RequestMethod.GET)
-	public ResponseEntity<?> buscar( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim) throws ParseException{
+	@RequestMapping(value="/data/{dataInicio}/{dataFim}",method = RequestMethod.GET)
+	public ResponseEntity<?> pesquisaEntreDatas( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
 	
 		try {
-			if(!dataInicio.isEmpty() && !dataFim.isEmpty()) {
+			
+			if(ocorrenciaService.validaData(dataInicio,dataFim)== true) {
+				dataInicio = ocorrenciaService.formataData(dataInicio);
+				dataFim = ocorrenciaService.formataData(dataFim);
 				Date dateI = formatter1.parse(dataInicio);
 				Date dateF = formatter1.parse(dataFim);
 				Date datesIn = (Date) dateI;
@@ -92,6 +96,12 @@ public class OcorrenciasResources {
 			detalheErro.setStatus("404");
 			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
 			detalheErro.setTitulo("Ocorrencia não encontrada.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
+		}catch (OcorrenciaDataInvalidaException e) {
+			DetalheErro detalheErro = new DetalheErro();
+			detalheErro.setStatus("404");
+			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
+			detalheErro.setTitulo("Data Invalida.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
 		}
 		
