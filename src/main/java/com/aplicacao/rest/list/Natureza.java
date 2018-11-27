@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="natureza", schema="listas")
+@Table(name="natureza",schema="public")
 public class Natureza implements Serializable{
 		
 	/**

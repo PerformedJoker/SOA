@@ -71,8 +71,16 @@ public class OcorrenciaService {
 		return listaDeOcorrencias;
 	}
 	
-	public List<Ocorrencia> ocorrenciasPorNatureza (Bairro bairro) {
+	public List<Ocorrencia> ocorrenciasPorBairro (Bairro bairro) {
 		List<Ocorrencia> listaDeOcorrencias = ocorrenciaRepository.findByBairro(bairro);
+		if(listaDeOcorrencias == null) {
+			throw new OcorrenciaExistenteException("Não Existem ocorrencias  com o Bairro Solicitados");
+		}
+		return listaDeOcorrencias;
+	}
+	
+	public List<Ocorrencia> ocorrenciasPorNaturezaEBairro (Natureza natureza, Bairro bairro) {
+		List<Ocorrencia> listaDeOcorrencias = ocorrenciaRepository.findByBairroAndNatureza(bairro, natureza);
 		if(listaDeOcorrencias == null) {
 			throw new OcorrenciaExistenteException("Não Existem ocorrencias  com o Bairro Solicitados");
 		}
