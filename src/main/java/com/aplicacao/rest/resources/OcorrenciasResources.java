@@ -1,6 +1,10 @@
 package com.aplicacao.rest.resources;
 
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -65,4 +69,35 @@ public class OcorrenciasResources {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(autor);
 	}
+	
+	
+	@RequestMapping(value="/{dataInicio}/{dataFim}/",method = RequestMethod.GET)
+	public ResponseEntity<?> buscar( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim) throws ParseException{
+		List<Ocorrencia> ocorrencias = new ArrayList<>();
+		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
+	
+		try {
+			if(!dataInicio.isEmpty() && !dataFim.isEmpty()) {
+				Date dateI = formatter1.parse(dataInicio);
+				Date dateF = formatter1.parse(dataFim);
+				Date datesIn = (Date) dateI;
+				Date datesFi= (Date) dateF;
+				ocorrencias = ocorrenciaService.ocorrenciasEntreDatas(datesIn, datesFi);
+			}
+		
+			
+			
+		} catch (OcorrenciaExistenteException e) {
+			DetalheErro detalheErro = new DetalheErro();
+			detalheErro.setStatus("404");
+			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
+			detalheErro.setTitulo("Ocorrencia não encontrada.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias);
+	}
+	
+	
+
 }
