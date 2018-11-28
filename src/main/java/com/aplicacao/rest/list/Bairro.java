@@ -94,11 +94,5 @@ public class Bairro implements Serializable{
 	}
 
 
-
-	
-	
-	
-	
-
 	
 }

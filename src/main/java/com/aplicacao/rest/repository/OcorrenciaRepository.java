@@ -17,7 +17,7 @@ public interface OcorrenciaRepository extends JpaRepository<Ocorrencia,Integer>{
 	List<Ocorrencia> findByDataRegistroIsBetweenAndBairro(Date dataInicio, Date dataFim, Bairro bairro);
 	List<Ocorrencia> findByDataRegistroIsBetweenAndBairroAndNatureza(Date dataInicio, Date dataFim, Bairro bairro,Natureza natureza);
 //	List<Ocorrencia> findByDataRegistroIsBetweenAndNaturezaAndBairro(Date dataInicio, Date dataFim, Natureza natureza,Bairro bairro);
-
+	
 	List<Ocorrencia> findByBairroAndNatureza(Bairro bairro,Natureza natureza);
 
 }
