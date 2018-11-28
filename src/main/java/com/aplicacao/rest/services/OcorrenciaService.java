@@ -2,6 +2,7 @@ package com.aplicacao.rest.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +232,102 @@ public class OcorrenciaService {
 			
 			return true;
 		}
+	}
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorNatureza(){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		
+		List<Natureza> listaNatureza = naturezaRepository.findAll();
+		
+		for (Natureza natureza : listaNatureza) {
+			List<Ocorrencia> listOcorrencia= ocorrenciasPorNatureza(natureza);
+			Integer quantidade = listOcorrencia.size();
+			ranking.put(quantidade, natureza.getDescricao());
+		}
+		
+		return ranking;
+		
+	}
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorBairro(){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		
+		List<Bairro> listaBairro = bairroRepository.findAll();
+		
+		for (Bairro bairro : listaBairro) {
+			List<Ocorrencia> listOcorrencia= ocorrenciasPorBairro(bairro);
+			Integer quantidade = listOcorrencia.size();
+			ranking.put(quantidade, bairro.getDescricao());
+		}
+		
+		return ranking;
+		
+	}
+	
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasNatureza(Date inicio, Date fim){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		
+		List<Natureza> listaNatureza = naturezaRepository.findAll();
+			
+		for (Natureza natureza : listaNatureza) {
+			List<Ocorrencia> listOcorrencia= ocorrenciaRepository.findByDataRegistroIsBetweenAndNatureza(inicio, fim, natureza);
+			Integer quantidade = listOcorrencia.size();
+			ranking.put(quantidade, natureza.getDescricao());
+		}
+		
+		return ranking;
+		
+	}
+	
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasBairro(Date inicio, Date fim){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		
+		List<Bairro> listaBairro = bairroRepository.findAll();
+			
+		for (Bairro bairro : listaBairro) {
+			List<Ocorrencia> listOcorrencia= ocorrenciaRepository.findByDataRegistroIsBetweenAndBairro(inicio, fim, bairro);
+			Integer quantidade = listOcorrencia.size();
+			ranking.put(quantidade, bairro.getDescricao());
+		}
+		
+		return ranking;
+		
+	}
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasEBairroNome(Date inicio, Date fim, String nomebairro){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		Bairro bairro = bairroRepository.findByDescricao(nomebairro);
+		if (bairro!=null) {
+			List<Natureza> listaNatureza = naturezaRepository.findAll();
+				
+			for (Natureza natureza : listaNatureza) {
+				List<Ocorrencia> listOcorrencia= ocorrenciaRepository.findByDataRegistroIsBetweenAndBairroAndNatureza(inicio, fim, bairro, natureza);
+				Integer quantidade = listOcorrencia.size();
+				ranking.put(quantidade, natureza.getDescricao());
+			}
+		
+		}
+		return ranking;
+		
+	}
+	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasEBairroId(Date inicio, Date fim, Bairro bairroPesquisado){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		Bairro bairro = bairroRepository.getOne(bairroPesquisado.getIdBairro());
+		if (bairro!=null) {
+			List<Natureza> listaNatureza = naturezaRepository.findAll();
+				
+			for (Natureza natureza : listaNatureza) {
+				List<Ocorrencia> listOcorrencia= ocorrenciaRepository.findByDataRegistroIsBetweenAndBairroAndNatureza(inicio, fim, bairro, natureza);
+				Integer quantidade = listOcorrencia.size();
+				ranking.put(quantidade, natureza.getDescricao());
+			}
+		
+		}
+		return ranking;
+		
 	}
 	
 }
