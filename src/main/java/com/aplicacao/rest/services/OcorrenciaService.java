@@ -313,6 +313,23 @@ public class OcorrenciaService {
 		
 	}
 	
+	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasENaturezaNome(Date inicio, Date fim, String nomeNatureza){
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		Natureza natureza = naturezaRepository.findByDescricao(nomeNatureza);
+		if (natureza!=null) {
+			List<Bairro> listaBairro = bairroRepository.findAll();
+				
+			for (Bairro bairro : listaBairro) {
+				List<Ocorrencia> listOcorrencia= ocorrenciaRepository.findByDataRegistroIsBetweenAndBairroAndNatureza(inicio, fim, bairro,natureza);
+				Integer quantidade = listOcorrencia.size();
+				ranking.put(quantidade, bairro.getDescricao());
+			}
+		
+		}
+		return ranking;
+		
+	}
+	
 	public  HashMap<Integer,String> rankingTodasOcorrenciasPorDatasEBairroId(Date inicio, Date fim, Bairro bairroPesquisado){
 		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
 		Bairro bairro = bairroRepository.getOne(bairroPesquisado.getIdBairro());

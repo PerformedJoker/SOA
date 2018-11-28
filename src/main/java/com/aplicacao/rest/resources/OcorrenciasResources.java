@@ -395,6 +395,49 @@ public class OcorrenciasResources {
 		return ResponseEntity.status(HttpStatus.OK).body(ocorrencias.size());
 	}
 	
+	@RequestMapping(value="/data/natureza/nome/ranking/{dataInicio}/{dataFim}/{nomeNatureza}",method = RequestMethod.GET)
+	public ResponseEntity<?> pesquisaEntreDatasENomeNaturezaRanking( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("nomeNatureza")String natureza) throws ParseException{
+		HashMap<Integer,String> ranking = new HashMap<Integer,String>();
+		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 00:00:00");
+	
+		try {
+			
+			if(ocorrenciaService.validaData(dataInicio,dataFim)== true) {
+				dataInicio = ocorrenciaService.formataData(dataInicio);
+				dataFim = ocorrenciaService.formataData(dataFim);
+				Date dateI = formatter1.parse(dataInicio);
+				Date dateF = formatter1.parse(dataFim);
+				Date datesIn = (Date) dateI;
+				Date datesFi= (Date) dateF;
+				natureza = natureza.toUpperCase();
+				ranking = ocorrenciaService.rankingTodasOcorrenciasPorDatasENaturezaNome(datesIn, datesFi, natureza);
+			}
+		
+			
+			
+		} catch (OcorrenciaExistenteException e) {
+			DetalheErro detalheErro = new DetalheErro();
+			detalheErro.setStatus("404");
+			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
+			detalheErro.setTitulo("Ocorrencia não encontrada.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
+		}catch (OcorrenciaDataInvalidaException e) {
+			DetalheErro detalheErro = new DetalheErro();
+			detalheErro.setStatus("404");
+			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
+			detalheErro.setTitulo("Data Invalida.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
+		}catch (NaturezaInvalidaException e) {
+			DetalheErro detalheErro = new DetalheErro();
+			detalheErro.setStatus("404");
+			detalheErro.setMsgDesenvolvedor("http://errors.localhost.com/");
+			detalheErro.setTitulo("Natureza não encontrada.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detalheErro);
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(ranking);
+	}
+	
 	@RequestMapping(value="/data/bairro/{dataInicio}/{dataFim}/{idBairro}",method = RequestMethod.GET)
 	public ResponseEntity<?> pesquisaEntreDatasEBairro( @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFim")String dataFim, @PathVariable("idBairro")Bairro bairro) throws ParseException{
 		List<Ocorrencia> ocorrencias = new ArrayList<>();
